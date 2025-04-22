@@ -1,5 +1,6 @@
 package br.com.docesbyvic.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class Sell {
     private Product product;
 
     @ManyToOne
+    @JsonBackReference
     private CompleteSell completeSell;
 
     public Sell() {}

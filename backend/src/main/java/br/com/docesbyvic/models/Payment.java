@@ -1,5 +1,6 @@
 package br.com.docesbyvic.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class Payment {
     private String date;
 
     @ManyToOne
+    @JsonBackReference
     private Client client;
 
     public Payment(){}

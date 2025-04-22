@@ -21,8 +21,15 @@ public class SellService {
     }
 
     // Busca uma venda específica pelo ID
-    public Optional<Sell> getSellById(Long id) {
-        return sellRepository.findById(id);
+    public Sell getSellById(Long id) {
+
+        Optional<Sell> sell = sellRepository.findById(id);
+
+        if (sell.isPresent()) {
+            return sell.get();
+        }
+        throw new RuntimeException("Sell not found with id: " + id);
+
     }
 
     // Cria uma nova venda

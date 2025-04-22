@@ -18,8 +18,14 @@ public class CompleteSellService {
         return completeSellRepository.findAll();
     }
 
-    public Optional<CompleteSell> findById(Long id) {
-        return completeSellRepository.findById(id);
+    public CompleteSell findById(Long id) {
+
+        Optional<CompleteSell> completeSell = completeSellRepository.findById(id);
+
+        if (completeSell.isPresent()) {
+            return completeSell.get();
+        }
+        throw new RuntimeException("CompleteSell not found with id: " + id);
     }
 
     public CompleteSell save(CompleteSell completeSell) {

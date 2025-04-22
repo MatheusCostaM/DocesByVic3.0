@@ -1,5 +1,7 @@
 package br.com.docesbyvic.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,11 +18,13 @@ public class CompleteSell {
     private String date;
 
     @ManyToOne
+    @JsonBackReference
     private Client client;
 
     private Double value;
 
     @OneToMany(mappedBy = "completeSell", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Sell> sellList = new ArrayList<>();
 
     public CompleteSell() {}

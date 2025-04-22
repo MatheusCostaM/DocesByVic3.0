@@ -1,5 +1,6 @@
 package br.com.docesbyvic.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,9 +22,11 @@ public class Client {
     private Double debt;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<CompleteSell> purchaseList = new HashSet<>();
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<Payment> paymentList = new HashSet<>();
 
 

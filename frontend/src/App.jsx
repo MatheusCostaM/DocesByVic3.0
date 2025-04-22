@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Linha from './Components/Linha'
-import Carrinho from './Components/Carrinho'
-import Navbar from './Components/Navbar'
-import Icone from './Components/Icone'
-
+import { Routes, Route } from 'react-router-dom'
+import AdminLogin from './pages/Admin'
+import HomePage from './pages/Home'
 
 export default function App() {
   const [carrinho, setCarrinho] = useState([]);
@@ -13,115 +11,34 @@ export default function App() {
 
   useEffect(() => {
     let newTotal = 0;
-
     for (let i = 0; i < carrinho.length; i++) {
       newTotal += (carrinho[i].price * carrinho[i].quantity);
     }
-
     setTotal(newTotal);
-
   }, [carrinho]);
 
-  const scroll = (id) => {
-    document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-
-  const Abrir = () => {
-
-    let newOpenCarrinho = openCarrinho;
-
-    if (newOpenCarrinho == false) {
-      newOpenCarrinho = true;
-    } else {
-      newOpenCarrinho = false;
-    }
-
-    setOpenCarrinho(newOpenCarrinho);
-
-  }
-
-  const Adicionar = (obj) => {
-    let newCarrinho = [...carrinho];
-    let adicionado = false;
-
-    for (let i = 0; i < carrinho.length; i++) {
-      if (newCarrinho[i].name == obj.name) {
-        newCarrinho[i].quantity += obj.quantity;
-        adicionado = true;
-      }
-    }
-
-    if (!adicionado) {
-      newCarrinho.push(obj);
-    }
-
-    setCarrinho(newCarrinho);
-
-  }
-
-  const Deletar = (name, quantidade) => {
-
-    let newCarrinho = [...carrinho]
-
-    for (let i = 0; i < carrinho.length; i++) {
-      if (name == carrinho[i].name && quantidade == carrinho[i].quantity) {
-        newCarrinho.splice(i, 1);
-
-        break
-      }
-
-    }
-
-    if (name == "tudo") {
-      newCarrinho = [];
-    }
-    setCarrinho(newCarrinho);
-  }
-
-  const LinkarPedido = () => {
-
-    let newMensage = "Quero fazer um pedido."
-    let newText = ""
-
-    if (carrinho.length > 0) {
-
-      newMensage = ""
-
-      newMensage += "Meu Pedido \n"
-
-      for (let i = 0; i < carrinho.length; i++) {
-
-        newText = `${carrinho[i].quantity} - ${carrinho[i].name}: R$${carrinho[i].price},00`
-
-        newMensage += newText + "\n";
-
-
-      }
-
-      newMensage += `Valor Total: R$${total},00`
-
-    }
-
-    newMensage = `https://wa.me/5511987313427?text=${encodeURIComponent(newMensage)}`
-
-    if (total == 0 || total >= 20) {
-      setMensagem(newMensage)
-    }
-    else {
-      alert("Valor mínimo de R$20,00 por pedido.")
-      setMensagem("")
-    }
-
-  }
+  useEffect(() => {
+    fetch("http://localhost:8080/products")
+      .then(response => response.json())
+      .then(data => console.log("Dados recebidos do backend:", data))
+      .catch(error => console.error("Erro ao buscar os produtos:", error));
+  }, []);
 
   return (
-    <>
-      <Navbar Abrir={Abrir} scroll={scroll} />
-      <Carrinho openCarrinho={openCarrinho} Abrir={Abrir} carrinho={carrinho} total={total} Deletar={Deletar} LinkarPedido={LinkarPedido} mensagem={mensagem} />
-      <Linha Adicionar={Adicionar} />
-      <Icone Abrir={Abrir} carrinho={carrinho}></Icone>
-    </>
-
-
+    <Routes>
+      <Route path="/" element={
+        <HomePage
+          carrinho={carrinho}
+          setCarrinho={setCarrinho}
+          openCarrinho={openCarrinho}
+          setOpenCarrinho={setOpenCarrinho}
+          total={total}
+          setTotal={setTotal}
+          mensagem={mensagem}
+          setMensagem={setMensagem}
+        />
+      } />
+      <Route path="/admin" element={<AdminLogin />} />
+    </Routes>
   )
 }

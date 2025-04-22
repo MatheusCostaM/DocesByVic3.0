@@ -3,6 +3,8 @@ package br.com.docesbyvic.controllers;
 import br.com.docesbyvic.models.Payment;
 import br.com.docesbyvic.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,29 +16,53 @@ import java.util.Optional;
 public class PaymentController {
 
     @Autowired
-    private PaymentService productService;
+    private PaymentService paymentService;
 
     // Endpoint para criar um novo produto
     @PostMapping
-    public Payment createPayment(@RequestBody Payment product) {
-        return productService.savePayment(product);
+    public ResponseEntity<Payment> createPayment(@RequestBody Payment product) {
+        try {
+            Payment createdPayment = paymentService.savePayment(product);
+            return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Endpoint para buscar todos os produtos
     @GetMapping
-    public List<Payment> getAllPayment() {
-        return productService.getAllPayment();
+    public ResponseEntity<List<Payment>> getAllPayment() {
+        try {
+            List<Payment> payments = paymentService.getAllPayment();
+
+            if (payments.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(payments, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // Endpoint para buscar produto por id
     @GetMapping("/{id}")
-    public Payment getPaymentById(@PathVariable Long id) {
-        return productService.getPaymentById(id);
+    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+        try {
+            Payment payment = paymentService.getPaymentById(id);
+            return new ResponseEntity<>(payment, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // Endpoint para deletar produto por id
     @DeleteMapping("/{id}")
-    public void deletePayment(@PathVariable Long id) {
-        productService.deletePayment(id);
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
+        try {
+            paymentService.deletePayment(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

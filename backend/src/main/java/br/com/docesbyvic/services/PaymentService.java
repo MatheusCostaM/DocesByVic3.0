@@ -17,25 +17,27 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    public List<Payment> getAllPayment(){
+    public List<Payment> getAllPayment() {
         return paymentRepository.findAll();
 
     }
 
-    public Payment savePayment(Payment payment){
+    public Payment savePayment(Payment payment) {
         return paymentRepository.save(payment);
     }
-    public void deletePayment(Long id){
+
+    public void deletePayment(Long id) {
         paymentRepository.deleteById(id);
     }
 
-    public Payment getPaymentById(Long id){
+    public Payment getPaymentById(Long id) {
 
         Optional<Payment> payment = paymentRepository.findById(id);
 
-        if(payment.isPresent()){
+        if (payment.isPresent()) {
             return payment.get();
-        } throw new RuntimeException("Payment not found with id: " + id);
+        }
+        throw new RuntimeException("Payment not found with id: " + id);
 
     }
 }

@@ -1,5 +1,6 @@
 package br.com.docesbyvic.services;
 
+import br.com.docesbyvic.models.Payment;
 import br.com.docesbyvic.models.Promotion;
 import br.com.docesbyvic.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,12 @@ public class PromotionService {
     }
 
     // Buscar promoção por id
-    public Optional<Promotion> getPromotionById(Long id) {
-        return promotionRepository.findById(id);
+    public Promotion getPromotionById(Long id) {
+        Optional<Promotion> promotion = promotionRepository.findById(id);
+        if (promotion.isPresent()) {
+            return promotion.get();
+        }
+        throw new RuntimeException("Promotion not found with id: " + id);
     }
 
     // Deletar promoção por id
