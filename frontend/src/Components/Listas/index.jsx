@@ -4,18 +4,20 @@ import { Produto, Cliente, Promocao } from "../ComponentsDB";
 
 const Lista = styled.div`
 
-background: gray;
-width: 50vw;
+text-shadow: 1px 1px 2px black;
+color: white;
+width: 90vw;
 height: 100%;
+text-align: center;
 
 `;
 
-export const ProdutosLista = ({ newProduto }) => {
+export const ProdutosLista = ({ newProduct }) => {
     const [produtos, setProdutos] = useState([]);
 
     useEffect(() => {
         searchProducts();
-    }, [newProduto]);
+    }, [newProduct]);
 
     const searchProducts = () => {
         fetch("http://localhost:8080/products")
@@ -31,24 +33,23 @@ export const ProdutosLista = ({ newProduto }) => {
         fetch(`http://localhost:8080/products/${$id}`, {
             method: "DELETE",
         })
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
                     console.log($id);
                     throw new Error("Erro ao deletar produto");
                 }
                 console.log("Produto deletado com sucesso");
 
+                await searchProducts();
             })
             .catch((error) => {
                 console.error("Erro ao deletar o Produto:", error);
             });
 
-        searchProducts();
     };
 
     return (
         <Lista>
-            <h1>Produtos</h1>
             {produtos.map((produto) => (
                 <Produto
                     key={produto.id}
@@ -63,12 +64,12 @@ export const ProdutosLista = ({ newProduto }) => {
     );
 };
 
-export const PromocoesLista = ({ newPromocao }) => {
+export const PromocoesLista = ({ newPromotion }) => {
     const [promocoes, setPromocoes] = useState([]);
 
     useEffect(() => {
         buscarPromocoes();
-    }, [newPromocao]);
+    }, [newPromotion]);
 
     const buscarPromocoes = () => {
         fetch("http://localhost:8080/promotions")
@@ -84,24 +85,21 @@ export const PromocoesLista = ({ newPromocao }) => {
         fetch(`http://localhost:8080/promotions/${id}`, {
             method: "DELETE",
         })
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
                     throw new Error("Erro ao deletar promoção");
                 }
                 console.log("Promoção deletada com sucesso");
 
-                setPromocoes(promocoes.filter(promocao => promocao.id !== id));
+                await buscarPromocoes();
             })
             .catch((error) => {
                 console.error("Erro ao deletar a promoção:", error);
             });
-
-        buscarPromocoes();
     };
 
     return (
         <Lista>
-            <h1>Promoções</h1>
             {promocoes.map((promocao) => (
                 <Promocao
                     key={promocao.id}
@@ -138,20 +136,20 @@ export const ClientesLista = ({ newCliente }) => {
         fetch(`http://localhost:8080/clients/${$id}`, {
             method: "DELETE",
         })
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
                     console.log($id);
                     throw new Error("Erro ao deletar cliente");
                 }
                 console.log("Cliente deletado com sucesso");
 
-                setClientes(clientes.filter(cliente => cliente.id !== $id));
+                await searchClient();
             })
             .catch((error) => {
                 console.error("Erro ao deletar o cliente:", error);
             });
 
-        searchClient();
+
     };
 
     const infoClient = ($id) => {
@@ -167,7 +165,6 @@ export const ClientesLista = ({ newCliente }) => {
 
     return (
         <Lista>
-            <h1>Clientes</h1>
             {clientes.map((cliente) => (
                 <Cliente
                     key={cliente.id}

@@ -1,7 +1,7 @@
 import React from 'react'
 import Linha from '../Components/Linha'
 import Carrinho from '../Components/Carrinho'
-import Navbar from '../Components/Navbar'
+import { NavbarPage } from '../Components/Navbar'
 import Icone from '../Components/Icone'
 
 export default function HomePage({
@@ -68,7 +68,7 @@ export default function HomePage({
 
     return (
         <>
-            <Navbar Abrir={Abrir} scroll={scroll} />
+            <NavbarPage Abrir={Abrir} scroll={scroll} />
             <Carrinho openCarrinho={openCarrinho} Abrir={Abrir} carrinho={carrinho} total={total} Deletar={Deletar} LinkarPedido={LinkarPedido} mensagem={mensagem} />
             <Linha Adicionar={Adicionar} />
             <Icone Abrir={Abrir} carrinho={carrinho}></Icone>

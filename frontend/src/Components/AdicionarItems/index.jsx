@@ -3,16 +3,20 @@ import styled from 'styled-components';
 import { Input, Submit } from '../ComponentsDB';
 
 const Container = styled.form`
-  width: 100%;
+  width: 20%;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  color: black;
-text-align: center;
-align-items: center;
+  color: #8b3e00;
+    text-align: center;
+    align-items: center;
+    background: white;
+    padding: 4vh;
+    border-radius: 20px;
 `;
 
-export const NovaPromocao = () => {
+export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
     const [nomePromocao, setNomePromocao] = useState('');
     const [valorAntes, setValorAntes] = useState('');
     const [valorDepois, setValorDepois] = useState('');
@@ -47,14 +51,19 @@ export const NovaPromocao = () => {
                 setValorAntes('');
                 setValorDepois('');
                 setQuantMin('');
+                adicionar();
             })
             .catch(error => {
                 console.error("Erro ao cadastrar o Promoção:", error);
             });
+
+        atualizaPromotion();
+
     };
 
     return (
         <Container onSubmit={handleSubmit}>
+            <h3>Adicionar Promoção</h3>
             <Input
                 $name="Nome da Promoção"
                 value={nomePromocao}
@@ -83,7 +92,7 @@ export const NovaPromocao = () => {
     );
 };
 
-export const NovoCliente = ({ atualizaClient }) => {
+export const NovoCliente = ({ atualizaClient, adicionar }) => {
     const [nomeCliente, setNomeCliente] = useState('');
     const [telefoneCliente, setTelefoneCliente] = useState('');
 
@@ -112,6 +121,7 @@ export const NovoCliente = ({ atualizaClient }) => {
                 console.log("Cliente cadastrado com sucesso:", data);
                 setNomeCliente('');
                 setTelefoneCliente('');
+                adicionar();
             })
             .catch(error => {
                 console.error("Erro ao cadastrar o cliente:", error);
@@ -122,6 +132,7 @@ export const NovoCliente = ({ atualizaClient }) => {
 
     return (
         <Container onSubmit={handleSubmit}>
+            <h3>Adicionar Cliente</h3>
             <Input
                 $name="Nome Cliente"
                 value={nomeCliente}
@@ -138,7 +149,7 @@ export const NovoCliente = ({ atualizaClient }) => {
 };
 
 
-export const NovoProduto = () => {
+export const NovoProduto = ({ atualizaProduct, adicionar }) => {
     const [tipoProduto, setTipoProduto] = useState('');
     const [saborProduto, setSaborProduto] = useState('');
     const [valorProduto, setValorProduto] = useState('');
@@ -170,14 +181,18 @@ export const NovoProduto = () => {
                 setTipoProduto('');
                 setSaborProduto('');
                 setValorProduto('');
+                adicionar();
             })
             .catch(error => {
                 console.error("Erro ao cadastrar o produto:", error);
             });
+
+        atualizaProduct();
     };
 
     return (
         <Container onSubmit={handleSubmit}>
+            <h3>Adicionar Produto</h3>
             <Input
                 $name="Tipo do Produto"
                 value={tipoProduto}

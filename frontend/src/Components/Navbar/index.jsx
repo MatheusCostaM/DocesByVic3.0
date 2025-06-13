@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Lines from '../Dados/DBLines';
+import { Lines, Tabs } from '../Dados/DBLines';
 import { Titulo, Clickavel } from '../Components'
 
 const Navbar = styled.div`
@@ -25,7 +25,7 @@ box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 div{
     display: flex;
     justify-content: space-around;
-    align-itens: center;
+    align-items: center;
     margin: 2vh;
 
     img {
@@ -35,7 +35,7 @@ div{
 
 `
 
-export default ({ Abrir, scroll }) => {
+export const NavbarPage = ({ Abrir, scroll }) => {
 
 
     return (
@@ -51,6 +51,18 @@ export default ({ Abrir, scroll }) => {
 
             <Clickavel Funcao={Abrir}><img src='/cart.svg' /></Clickavel>
 
+        </Navbar>
+    )
+}
+
+export const NavbarAdm = ({ alteraPainel }) => {
+    return (
+        <Navbar>
+            <div className='menu'>
+                {Tabs.map((tab, index) => (
+                    <Clickavel Funcao={() => { alteraPainel(tab) }} key={index}><Titulo tamanho='1'>{tab}</Titulo></Clickavel>)
+                )}
+            </div>
         </Navbar>
     )
 }

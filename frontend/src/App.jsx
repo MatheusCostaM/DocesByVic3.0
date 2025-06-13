@@ -38,7 +38,7 @@ export default function App() {
           setMensagem={setMensagem}
         />
       } />
-      <Route path="/admin" element={<AdminLogin />} />
+      <Route path="/adm" element={<AdminLogin />} />
     </Routes>
   )
 }
