@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Clickavel } from '../Components';
 import { Input, Submit } from '../ComponentsDB';
 
 const Container = styled.form`
@@ -14,13 +15,39 @@ const Container = styled.form`
     background: white;
     padding: 4vh;
     border-radius: 20px;
+
+    h3{
+        padding:0;
+        margin: 0;
+        
+    }
+
+    div{
+        width:100%;
+    }
+`
+    ;
+
+
+const Sair = styled.div`
+
+display: flex;
+width: 100%;
+justify-content: end;
+color: red;
+
+div{
+    max-width: 3vh;
+}
+
+
 `;
 
-export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
-    const [nomePromocao, setNomePromocao] = useState('');
-    const [valorAntes, setValorAntes] = useState('');
-    const [valorDepois, setValorDepois] = useState('');
-    const [quantMin, setQuantMin] = useState('');
+export const NovaPromocao = ({ atualizaPromotion, adicionar, data }) => {
+    const [nomePromocao, setNomePromocao] = useState(data ? data.nome : "");
+    const [valorAntes, setValorAntes] = useState(data ? data.valor : "");
+    const [valorDepois, setValorDepois] = useState(data ? data.valorNovo : "");
+    const [quantMin, setQuantMin] = useState(data ? data.regra : "");
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -32,8 +59,14 @@ export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
             regra: quantMin
         };
 
-        fetch("http://localhost:8080/promotions", {
-            method: "POST",
+        const url = data
+            ? `http://localhost:8080/promotions/${data.id}`
+            : "http://localhost:8080/promotions";
+
+        const method = data ? "PUT" : "POST";
+
+        fetch(url, {
+            method,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -41,12 +74,12 @@ export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Erro ao cadastrar Promoção");
+                    throw new Error("Erro ao atualizar a promoção");
                 }
                 return response.json();
             })
             .then(data => {
-                console.log("Promoção cadastrada com sucesso:", data);
+                console.log("Cliente atualizado com a promoção:", data);
                 setNomePromocao('');
                 setValorAntes('');
                 setValorDepois('');
@@ -54,7 +87,7 @@ export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
                 adicionar();
             })
             .catch(error => {
-                console.error("Erro ao cadastrar o Promoção:", error);
+                console.error("Erro ao atualizar o promoção:", error);
             });
 
         atualizaPromotion();
@@ -63,7 +96,10 @@ export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
 
     return (
         <Container onSubmit={handleSubmit}>
-            <h3>Adicionar Promoção</h3>
+            <div>
+                <Sair><Clickavel><h3 onClick={adicionar}>X</h3></Clickavel></Sair>
+                <h3>Adicionar Promoção</h3>
+            </div>
             <Input
                 $name="Nome da Promoção"
                 value={nomePromocao}
@@ -92,9 +128,9 @@ export const NovaPromocao = ({ atualizaPromotion, adicionar }) => {
     );
 };
 
-export const NovoCliente = ({ atualizaClient, adicionar }) => {
-    const [nomeCliente, setNomeCliente] = useState('');
-    const [telefoneCliente, setTelefoneCliente] = useState('');
+export const NovoCliente = ({ atualizaClient, adicionar, data }) => {
+    const [nomeCliente, setNomeCliente] = useState(data ? data.nome : "");
+    const [telefoneCliente, setTelefoneCliente] = useState(data ? data.telefone : "");
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -104,8 +140,14 @@ export const NovoCliente = ({ atualizaClient, adicionar }) => {
             phone: telefoneCliente
         };
 
-        fetch("http://localhost:8080/clients", {
-            method: "POST",
+        const url = data
+            ? `http://localhost:8080/clients/${data.id}`
+            : "http://localhost:8080/clients";
+
+        const method = data ? "PUT" : "POST";
+
+        fetch(url, {
+            method,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -113,26 +155,32 @@ export const NovoCliente = ({ atualizaClient, adicionar }) => {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Erro ao cadastrar cliente");
+                    throw new Error("Erro ao atualizar cliente");
                 }
                 return response.json();
             })
             .then(data => {
-                console.log("Cliente cadastrado com sucesso:", data);
+                console.log("Cliente atualizado com sucesso:", data);
                 setNomeCliente('');
                 setTelefoneCliente('');
                 adicionar();
             })
             .catch(error => {
-                console.error("Erro ao cadastrar o cliente:", error);
+                console.error("Erro ao atualizar o cliente:", error);
             });
+
 
         atualizaClient();
     };
 
     return (
         <Container onSubmit={handleSubmit}>
-            <h3>Adicionar Cliente</h3>
+
+            <div>
+                <Sair><Clickavel><h3 onClick={adicionar}>X</h3></Clickavel></Sair>
+                <h3>Adicionar Cliente</h3>
+            </div>
+
             <Input
                 $name="Nome Cliente"
                 value={nomeCliente}
@@ -149,10 +197,10 @@ export const NovoCliente = ({ atualizaClient, adicionar }) => {
 };
 
 
-export const NovoProduto = ({ atualizaProduct, adicionar }) => {
-    const [tipoProduto, setTipoProduto] = useState('');
-    const [saborProduto, setSaborProduto] = useState('');
-    const [valorProduto, setValorProduto] = useState('');
+export const NovoProduto = ({ atualizaProduct, adicionar, data }) => {
+    const [tipoProduto, setTipoProduto] = useState(data ? data.tipo : '');
+    const [saborProduto, setSaborProduto] = useState(data ? data.sabor : '');
+    const [valorProduto, setValorProduto] = useState(data ? data.valor : '');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -160,11 +208,17 @@ export const NovoProduto = ({ atualizaProduct, adicionar }) => {
         const novoProduto = {
             tipe: tipoProduto,
             sabor: saborProduto,
-            value: valorProduto
+            value: valorProduto,
         };
 
-        fetch("http://localhost:8080/products", {
-            method: "POST",
+        const url = data
+            ? `http://localhost:8080/products/${data.id}`
+            : "http://localhost:8080/products";
+
+        const method = data ? "PUT" : "POST";
+
+        fetch(url, {
+            method,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -172,19 +226,19 @@ export const NovoProduto = ({ atualizaProduct, adicionar }) => {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Erro ao cadastrar Produto");
+                    throw new Error(data ? "Erro ao atualizar Produto" : "Erro ao cadastrar Produto");
                 }
                 return response.json();
             })
             .then(data => {
-                console.log("Produto cadastrado com sucesso:", data);
+                console.log(data ? "Produto atualizado com sucesso:" : "Produto cadastrado com sucesso:", data);
                 setTipoProduto('');
                 setSaborProduto('');
                 setValorProduto('');
                 adicionar();
             })
             .catch(error => {
-                console.error("Erro ao cadastrar o produto:", error);
+                console.error("Erro ao salvar o produto:", error);
             });
 
         atualizaProduct();
@@ -192,7 +246,10 @@ export const NovoProduto = ({ atualizaProduct, adicionar }) => {
 
     return (
         <Container onSubmit={handleSubmit}>
-            <h3>Adicionar Produto</h3>
+            <div>
+                <Sair><Clickavel><h3 onClick={adicionar}>X</h3></Clickavel></Sair>
+                <h3>{data ? "Editar Produto" : "Adicionar Produto"}</h3>
+            </div>
             <Input
                 $name="Tipo do Produto"
                 value={tipoProduto}

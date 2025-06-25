@@ -12,7 +12,7 @@ text-align: center;
 
 `;
 
-export const ProdutosLista = ({ newProduct }) => {
+export const ProdutosLista = ({ newProduct, editar }) => {
     const [produtos, setProdutos] = useState([]);
 
     useEffect(() => {
@@ -45,7 +45,28 @@ export const ProdutosLista = ({ newProduct }) => {
             .catch((error) => {
                 console.error("Erro ao deletar o Produto:", error);
             });
+    };
 
+    const infoProduct = async ($id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/products/${$id}`, {
+                method: "GET",
+            });
+            const data = await response.json();
+            console.log("Produto encontrado com sucesso", data);
+            return data;
+        } catch (error) {
+            console.error("Erro ao buscar produto:", error);
+            return null;
+        }
+    };
+
+    const editarProduct = async ($id) => {
+        const data = await infoProduct($id);
+        if (data) {
+            const dado = { tipo: data.tipe, sabor: data.sabor, valor: data.value, id: data.id }
+            editar(dado);
+        }
     };
 
     return (
@@ -58,13 +79,14 @@ export const ProdutosLista = ({ newProduct }) => {
                     $sabor={produto.sabor}
                     $value={produto.value}
                     deleteProduct={deleteProduct}
+                    editarProduct={editarProduct}
                 />
             ))}
         </Lista>
     );
 };
 
-export const PromocoesLista = ({ newPromotion }) => {
+export const PromocoesLista = ({ newPromotion, editar }) => {
     const [promocoes, setPromocoes] = useState([]);
 
     useEffect(() => {
@@ -98,6 +120,28 @@ export const PromocoesLista = ({ newPromotion }) => {
             });
     };
 
+    const infoPromotion = async ($id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/promotions/${$id}`, {
+                method: "GET",
+            });
+            const data = await response.json();
+            console.log("Promoção encontrada com sucesso", data);
+            return data;
+        } catch (error) {
+            console.error("Erro ao buscar promoção:", error);
+            return null;
+        }
+    };
+
+    const editarPromotion = async ($id) => {
+        const data = await infoPromotion($id);
+        if (data) {
+            const dado = { nome: data.name, valor: data.value, valorNovo: data.newValue, regra: data.regra, id: data.id }
+            editar(dado);
+        }
+    };
+
     return (
         <Lista>
             {promocoes.map((promocao) => (
@@ -109,13 +153,14 @@ export const PromocoesLista = ({ newPromotion }) => {
                     $newValue={promocao.newValue}
                     $regra={promocao.regra}
                     deletePromotion={deletePromotion}
+                    editarPromotion={editarPromotion}
                 />
             ))}
         </Lista>
     );
 };
 
-export const ClientesLista = ({ newCliente }) => {
+export const ClientesLista = ({ newCliente, editar }) => {
     const [clientes, setClientes] = useState([]);
 
     useEffect(() => {
@@ -152,16 +197,27 @@ export const ClientesLista = ({ newCliente }) => {
 
     };
 
-    const infoClient = ($id) => {
-        fetch(`http://localhost:8080/clients/${$id}`, {
-            method: "GET",
-        })
-            .then((response) => response.json())
-            .then((data) =>
-                console.log("Cliente encontrado com sucesso", data)
-            )
-            .catch((error) => console.error("Erro ao buscar cliente:", error));
-    }
+    const infoClient = async ($id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/clients/${$id}`, {
+                method: "GET",
+            });
+            const data = await response.json();
+            console.log("Cliente encontrado com sucesso", data);
+            return data;
+        } catch (error) {
+            console.error("Erro ao buscar cliente:", error);
+            return null;
+        }
+    };
+
+    const editarClient = async ($id) => {
+        const data = await infoClient($id);
+        if (data) {
+            const dado = { nome: data.name, telefone: data.phone, id: data.id }
+            editar(dado);
+        }
+    };
 
     return (
         <Lista>
@@ -172,6 +228,7 @@ export const ClientesLista = ({ newCliente }) => {
                     $name={cliente.name}
                     $phone={cliente.phone}
                     deleteClient={deleteClient}
+                    editarClient={editarClient}
                     infoClient={infoClient}
                 />
             ))}

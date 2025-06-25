@@ -38,6 +38,7 @@ export default function AdminLogin() {
     const [newPromotion, setNewPromotion] = useState(false);
     const [painel, setPainel] = useState("clientes");
     const [adiciona, setAdiciona] = useState(false);
+    const [data, setData] = useState(null);
 
     const atualizaClient = () => {
         setNewCliente(!newCliente);
@@ -54,14 +55,22 @@ export default function AdminLogin() {
     const alteraPainel = (novoPainel) => {
 
         setPainel(novoPainel);
+        setAdiciona(false);
+        setData(null);
 
     }
 
     const adicionar = () => {
         setAdiciona(!adiciona);
+        if (!adiciona == false) {
+            setData(null)
+        }
     }
 
-
+    const editar = (dados) => {
+        setData(dados);
+        setAdiciona(true);
+    }
 
     return (
         <Body>
@@ -83,11 +92,11 @@ export default function AdminLogin() {
                         {(() => {
                             switch (painel) {
                                 case "clientes":
-                                    return <NovoCliente atualizaClient={atualizaClient} adicionar={adicionar} />;
+                                    return <NovoCliente atualizaClient={atualizaClient} adicionar={adicionar} data={data} />;
                                 case "produtos":
-                                    return <NovoProduto atualizaProduct={atualizaProduct} adicionar={adicionar} />;
+                                    return <NovoProduto atualizaProduct={atualizaProduct} adicionar={adicionar} data={data} />;
                                 case "promoções":
-                                    return <NovaPromocao atualizaPromotion={atualizaPromotion} adicionar={adicionar} />;
+                                    return <NovaPromocao atualizaPromotion={atualizaPromotion} adicionar={adicionar} data={data} />;
                                 default:
                                     return null;
                             }
@@ -98,11 +107,11 @@ export default function AdminLogin() {
                     {(() => {
                         switch (painel) {
                             case "clientes":
-                                return <ClientesLista newCliente={newCliente} />;
+                                return <ClientesLista newCliente={newCliente} editar={editar} />;
                             case "produtos":
-                                return <ProdutosLista newProduct={newProduct} />;
+                                return <ProdutosLista newProduct={newProduct} editar={editar} />;
                             case "promoções":
-                                return <PromocoesLista newPromotion={newPromotion} />;
+                                return <PromocoesLista newPromotion={newPromotion} editar={editar} />;
                             default:
                                 return null;
                         }
